@@ -19,5 +19,6 @@ export const TitleContacts = styled.h2`
 	color: white;
 `;
 export const P = styled.p`
+	padding-top: 15px;
 	color: white;
 `;

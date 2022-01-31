@@ -1,30 +1,22 @@
-import { useSelector, useDispatch } from "react-redux";
-import { deleteContacts } from "../../redux/phonebook/phonebook-actions";
-import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { deleteContact } from "../../redux/phonebook/phonebook-actions";
+
+import React from "react";
 import { Ul, Li, Button, P } from "./ContactList.styled";
 
-export default function ContactsList() {
-	const { contacts, filter } = useSelector((state) => state);
+export default function ContactList({ contacts }) {
 	const dispatch = useDispatch();
 
-	const onDeleteBtn = (id) => dispatch(deleteContacts(id));
-
-	const filteredContacts = (contacts, filter) => {
-		return contacts.filter((contact) =>
-			contact.name.toLowerCase().includes(filter.toLowerCase())
-		);
-	};
-
-	const filterContacts = filteredContacts(contacts, filter);
+	const onDelete = (id) => dispatch(deleteContact(id));
 
 	return (
 		<Ul>
-			{filterContacts.map(({ id, name, phone }) => (
+			{contacts.map(({ id, name, number }) => (
 				<Li key={id}>
 					<P>
-						{name}: {phone}
+						{name}: {number}
 					</P>
-					<Button type="button" onClick={(e) => onDeleteBtn(id)}>
+					<Button type="button" onClick={() => onDelete(id)}>
 						Delete
 					</Button>
 				</Li>
@@ -32,14 +24,3 @@ export default function ContactsList() {
 		</Ul>
 	);
 }
-
-ContactsList.propTypes = {
-	onDeleteBtn: PropTypes.func,
-	contacts: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.string,
-			name: PropTypes.string,
-			phone: PropTypes.string,
-		})
-	),
-};

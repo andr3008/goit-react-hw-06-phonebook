@@ -1,37 +1,30 @@
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/phonebook/phonebook-actions";
+import PropTypes from "prop-types";
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import propTypes from "prop-types";
-import { Form, Label, Input, Button } from "./ContactForm.styled";
-import { addContacts } from "../../redux/phonebook/phonebook-actions.js";
 import { nanoid } from "nanoid";
-export default function ContactsForm() {
-	const [name, setName] = useState("");
-	const [phone, setPhone] = useState("");
-	const { contacts } = useSelector((state) => state);
-	const dispatch = useDispatch();
+import { Form, Label, Input, Button } from "./ContactForm.styled";
 
-	const onAddContacts = (name, phone) => dispatch(addContacts(name, phone));
+export default function ContactForm() {
+	const [name, setName] = useState("");
+	const [number, setNumber] = useState("");
+
+	const dispatch = useDispatch();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		dispatch(addContact({ name, number }));
+		resetInput();
+	};
 
-		const isAdded = (name) =>
-			contacts.map((contact) => contact.name).includes(name);
-
-		if (isAdded(name)) {
-			return alert(`${name} is already in contacts`);
-		} else {
-			onAddContacts(name, phone);
-		}
-
+	const resetInput = () => {
 		setName("");
-		setPhone("");
+		setNumber("");
 	};
 	const nameInputId = nanoid();
 	const numberInputId = nanoid();
-
 	return (
-		<Form onSubmit={(e) => handleSubmit(e)}>
+		<Form onSubmit={handleSubmit}>
 			<Label htmlFor={nameInputId}>
 				Name
 				<Input
@@ -47,24 +40,20 @@ export default function ContactsForm() {
 				/>
 			</Label>
 			<Label htmlFor={numberInputId}>
-				Phone
+				Number
 				<Input
 					type="tel"
-					name="phone"
+					name="number"
 					id={numberInputId}
-					value={phone}
-					onChange={(e) => setPhone(e.target.value)}
+					value={number}
+					onChange={(e) => setNumber(e.target.value)}
 					pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
 					title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
 					required
 					placeholder="111-11-11"
 				/>
 			</Label>
-			<Button type="submit">Add contact</Button>
+			<Button type="sumbit">Add contact</Button>
 		</Form>
 	);
 }
-
-ContactsForm.propTypes = {
-	onAddContacts: propTypes.func,
-};

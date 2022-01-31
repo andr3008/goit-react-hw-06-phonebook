@@ -1,23 +1,27 @@
-import { combineReducers, createReducer } from "@reduxjs/toolkit";
+import { createReducer, combineReducers } from "@reduxjs/toolkit";
+import { changeFilter, addContact, deleteContact } from "./phonebook-actions";
 
-import { changeFilter, addContacts, deleteContacts } from "./phonebook-actions";
-
-const contactsReducer = createReducer(
-  JSON.parse(window.localStorage.getItem("contacts")),
-  {
-    [addContacts]: (state, { payload }) => [...state, payload],
-    [deleteContacts]: (state, { payload }) =>
-      state.filter((contact) => {
-        return contact.id !== payload;
-      }),
-  }
-);
-
-const filterReducer = createReducer("", {
+import toast from "react-hot-toast";
+const filter = createReducer("", {
   [changeFilter]: (_, { payload }) => payload,
 });
 
-export default combineReducers({
-  contacts: contactsReducer,
-  filter: filterReducer,
+const items = createReducer([], {
+  [addContact]: (state, { payload }) => {
+    const { name } = payload;
+    const idx = state.findIndex(
+      (contact) => contact.name.toLowerCase() === name.toLowerCase()
+    );
+    if (idx !== -1) {
+      toast(`${name} is already in contacts`);
+      return state;
+    }
+    const newState = [...state, payload];
+    return newState;
+  },
+  [deleteContact]: (state, { payload }) => {
+    const newState = state.filter(({ id }) => id !== payload);
+    return newState;
+  },
 });
+export default combineReducers({ items, filter });
