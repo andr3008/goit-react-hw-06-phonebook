@@ -33,7 +33,6 @@ export const Button = styled.button`
 	text-transform: capitalize;
 	box-shadow: 7px 7px 13px 0px rgba(0, 0, 0, 0.38);
 	transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
-
 	&:hover {
 		background-color: rgb(129, 214, 164);
 		color: white;

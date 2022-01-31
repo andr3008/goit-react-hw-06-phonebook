@@ -1,29 +1,26 @@
-import PropTypes from "prop-types";
-import { Component } from "react";
-import { nanoid } from "nanoid";
+import { useSelector, useDispatch } from "react-redux";
+import { changeFilter } from "../../redux/phonebook/phonebook-actions";
 import { Label, Input } from "./Filter.styled";
+import { nanoid } from "nanoid";
 
-class Filter extends Component {
-	filterInputId = nanoid();
-	render() {
-		const { value, onChange } = this.props;
-		return (
-			<Label htmlFor={this.filterInputId}>
-				Find contacts by name
-				<Input
-					type="text"
-					name="name"
-					value={value}
-					id={this.filterInputId}
-					onChange={onChange}
-					placeholder="Andrei Potapov"
-				/>
-			</Label>
-		);
-	}
+export default function Filter() {
+	const filterInputId = nanoid();
+
+	const filter = useSelector((state) => state.filter);
+	const dispatch = useDispatch();
+
+	const handleChangeFilter = (e) => dispatch(changeFilter(e.target.value));
+	return (
+		<Label htmlFor={filterInputId} value={filter}>
+			Find contacts by name
+			<Input
+				type="text"
+				name="name"
+				value={filter}
+				id={filterInputId}
+				onChange={handleChangeFilter}
+				placeholder="Andrei Potapov"
+			/>
+		</Label>
+	);
 }
-Filter.propTypes = {
-	value: PropTypes.string,
-	onChange: PropTypes.func.isRequired,
-};
-export default Filter;

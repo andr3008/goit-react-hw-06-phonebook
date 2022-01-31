@@ -1,34 +1,45 @@
+import { useSelector, useDispatch } from "react-redux";
+import { deleteContacts } from "../../redux/phonebook/phonebook-actions";
 import PropTypes from "prop-types";
-import { Component } from "react";
 import { Ul, Li, Button, P } from "./ContactList.styled";
 
-class ContactList extends Component {
-	render() {
-		const { contacts, onDeleteContact } = this.props;
-		return (
-			<Ul>
-				{contacts.map(({ id, name, number }) => (
-					<Li key={id}>
-						<P>
-							{name}: {number}
-						</P>
-						<Button type="button" onClick={() => onDeleteContact(id)}>
-							Delete
-						</Button>
-					</Li>
-				))}
-			</Ul>
+export default function ContactsList() {
+	const { contacts, filter } = useSelector((state) => state);
+	const dispatch = useDispatch();
+
+	const onDeleteBtn = (id) => dispatch(deleteContacts(id));
+
+	const filteredContacts = (contacts, filter) => {
+		return contacts.filter((contact) =>
+			contact.name.toLowerCase().includes(filter.toLowerCase())
 		);
-	}
+	};
+
+	const filterContacts = filteredContacts(contacts, filter);
+
+	return (
+		<Ul>
+			{filterContacts.map(({ id, name, phone }) => (
+				<Li key={id}>
+					<P>
+						{name}: {phone}
+					</P>
+					<Button type="button" onClick={(e) => onDeleteBtn(id)}>
+						Delete
+					</Button>
+				</Li>
+			))}
+		</Ul>
+	);
 }
-ContactList.propTypes = {
+
+ContactsList.propTypes = {
+	onDeleteBtn: PropTypes.func,
 	contacts: PropTypes.arrayOf(
 		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			name: PropTypes.string.isRequired,
-			number: PropTypes.string.isRequired,
+			id: PropTypes.string,
+			name: PropTypes.string,
+			phone: PropTypes.string,
 		})
 	),
-	onDeleteContact: PropTypes.func.isRequired,
 };
-export default ContactList;
