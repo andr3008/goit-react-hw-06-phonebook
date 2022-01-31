@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import { addContact } from "../../redux/phonebook/phonebook-actions";
-import PropTypes from "prop-types";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import { Form, Label, Input, Button } from "./ContactForm.styled";

@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { changeFilter } from "../../redux/phonebook/phonebook-actions";
 import { getFilter } from "../../redux/phonebook/phonebook-selectors";
-
 import React from "react";
 import { nanoid } from "nanoid";
 import { Label, Input } from "./Filter.styled";
@@ -12,8 +11,8 @@ export default function Filter() {
 
 	const onChange = (value) => dispatch(changeFilter(value));
 
-	const handleFilterChange = (event) => {
-		const { value } = event.target;
+	const handleFilterChange = (e) => {
+		const { value } = e.target;
 		onChange(value.toLowerCase());
 	};
 
